@@ -1,0 +1,13 @@
+This is the code developed during my semester project at EURECOM, 
+"Building data.eurecom.fr".
+
+chain.sh will execute the python scripts in order. This will generate 
+RDF files in the working directory and load them in a triplestore. This 
+will also create some pickle files. In the end, a JSON file is created 
+for use in Exhibit. 
+
+Requirements:
+- get dependencies : rdflib (& isodate), SPARQLWrapper, httplib2
+- execute the code from withing EURECOM's network
+- change the address of the repository in 3_update.py and 
+4_makeJSONExhibit.py
