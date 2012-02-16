@@ -1,0 +1,92 @@
+body {
+color: #222;
+background-color: #fff;
+}
+
+.lens a {
+    color: #666666;
+}
+
+a.exhibit-item, a.exhibit-item:link, a.exhibit-item:active, a.exhibit-item:visited {
+    border-bottom: 1px dotted #666;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:link {
+    color: #222222;
+}
+
+#control-panel, #map-panel {
+padding: 1em;
+background: #f0f0f0;
+}
+
+header {
+margin: 0.5em;
+text-align: center;
+}
+
+header div {
+display: inline-block;
+vertical-align: middle;
+}
+
+#description {
+font-size: 120%;
+}
+
+#logo {
+margin: 1em;
+}
+
+div.name {
+font-weight: bold;
+font-size:   120%;
+}
+
+.year {
+font-style:  italic;
+}
+
+#dateSlider {
+background: none repeat scroll 0 0 #E3E6EC;
+border: 1px solid #B8B8BB;
+margin: 0 auto;
+padding: 0.5em 2em 0.5em 0.5em;
+width: 80%;
+}
+
+#datedisplay {
+text-align: center;
+}
+
+.exhibit-slider-bar {
+width:100% !important;
+}
+
+.exhibit-slider-display {
+display:none;
+}
+
+.exhibit-facet {
+margin: 0;
+}
+
+.lens {
+display: none;
+}
+
+.item {
+border: 0px solid #aaa;
+padding: 0.3em;
+}    
+
+div.exhibit-facet-body {
+background-color: #E3E6EC;
+border: 1px solid #B8B8BB;
+}
+
+div.exhibit-facet-header {
+font-size: 120%;
+}

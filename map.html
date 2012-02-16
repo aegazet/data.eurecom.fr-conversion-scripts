@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Map of Eurecom's publications</title>
+		<link rel='stylesheet' href='http://www.simile-widgets.org/styles/common.css' type='text/css' />
+
+		<link href="exhibit-data.js" type="application/json" rel="exhibit/data" />
+		<script src="http://api.simile-widgets.org/exhibit/2.2.0/exhibit-api.js?autoCreate=false"
+		type="text/javascript"></script>
+		<script src="http://static.simile.mit.edu/exhibit/extensions-2.0/map/map-extension.js?gmapkey=AIzaSyBVixGggvjQ8mcwhWtenorsgw1CcNMphkY"
+		type="text/javascript"></script>
+		
+		<link rel='stylesheet' href='styles.css' type='text/css' />
+		
+		<style>
+		</style>
+	</head> 
+	
+	<body onload="onLoad();">
+	
+		<header>
+			<div id="logo-wrapper">
+				<a href="http://www.eurecom.fr/" ><img id="logo" src="EURECOM_logo_quadri_small.jpg" alt="EURECOM logo" ></a>
+			</div>
+			<div>
+				<h1>Map of EURECOM's publications in conferences and workshops</h1>
+				<p id="description">
+					This <a href="http://www.simile-widgets.org/exhibit/" >Exhibit</a> 
+					was created as a showcase application
+					for the data.eurecom.fr project at <a href="http://www.eurecom.fr/" >EURECOM</a> by <a href="javascript:_m('gazet', 'eurecom.fr')"> 
+	        		Anne-Elisabeth&nbsp;Gazet</a>. 
+				</p>
+			</div>
+		</header>
+		
+		<div ex:role="collection" id="documents" ex:itemTypes="Document" ></div>
+		
+		<table width="100%">
+			<tr valign="top">
+				<td id="map-panel">
+					
+					<div id="dateSlider">
+						<div ex:role="facet" 
+							ex:collectionID="documents"
+							ex:expression=".date"
+							ex:facetClass="Slider" 
+							ex:horizontal="true"
+							ex:histogram="false"
+							ex:height=2
+							ex:facetLabel="Restriction on the range of dates">
+						</div>
+						<div id="datedisplay"> <span id="date1"></span> - <span id="date2"></span> </div>
+					</div>
+					
+					<div ex:role="coder" ex:coderclass="Color" id="dep-colors" style="display: none; ">
+						<span ex:color="#FBFF8C">Academic affairs</span>
+						<span ex:color="#8CD1FF">IT Support</span>
+						<span ex:color="#A9FF8C">Mobile Communications</span>
+						<span ex:color="#9D8CFF">Multimedia Communications</span>
+						<span ex:color="#FF8CBA">Networking and Security</span>
+						<span ex:case="others" ex:color="#aaa">Other types</span>
+						<span ex:case="mixed" ex:color="#FFBC66">Cross-department</span>
+						<span ex:case="missing" ex:color="#E0E0E0">No department (missing info)</span>
+					</div>
+					
+					<div  ex:role="viewPanel">
+						<div ex:role="view"
+							ex:label="Map"
+							ex:viewClass="Map"
+							ex:collectionID="documents"
+							ex:mapHeight="400"
+							ex:center="43.613264,7.047791"
+							ex:latlng="concat(.conf.lat, ',', .conf.long)"
+							ex:colorKey=".author.dep"
+							ex:colorCoder="dep-colors">
+						</div>					
+						
+						<table ex:role="lens" ex:itemTypes="Person"  class="person-lens lens">
+							<tr>
+								<td>
+									<div><span ex:content=".label" class="name"></span> <a ex:href-content="concat('javascript:filterByAuthor(\'', .uri ,'\')')" >(show authored papers)</a></div>
+									<div ex:if-exists=".role" >Role: <span ex:content=".role"></span></div>
+									<div ex:if-exists=".dep" >Department: <span ex:content=".dep"></span></div>
+								</td>
+							</tr>
+						</table>
+						<table ex:role="lens" ex:itemTypes="Document" ex:formats="date { show:date; template:'d MMMM yyyy'}" class="document-lens lens">
+							<tr>
+								<td>
+									<div ex:content=".label" class="name"></div>
+									<div>Presented at: <span ex:content=".conf.label"></span> <a ex:href-content="concat('javascript:filterByConf(\'', .conf ,'\')')" >(show presented papers)</a></div>
+									<div>Published on: <span ex:content=".date"></span></div>
+									<div>Author(s): <span ex:content=".author"></span></div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</td>
+				
+				<td id="control-panel" width="25%">
+					<div id="dep-facet" ex:role="facet" ex:height="11em" ex:collectionID="documents" ex:expression=".author.dep" ex:facetLabel="Publications by department"></div>
+					<div id="role-facet" ex:role="facet" ex:height="7em" ex:collectionID="documents" ex:expression=".author.role" ex:facetLabel="Publications by type of author"></div>
+					<div id="author-facet" ex:sortMode="count" ex:role="facet" ex:height="11em" ex:collectionID="documents" ex:expression=".author" ex:facetLabel="Publications by author"></div>
+					<div id="conf-facet" ex:role="facet" ex:height="20em" ex:collectionID="documents" ex:expression=".conf" ex:facetLabel="List of conferences"></div>
+				</td>
+			</tr>
+		</table>
+	</body>
+  
+<script>
+	function onSlider1Change(e) {
+			inputs = document.getElementsByTagName("input");
+			d = new Date(parseInt(inputs[0].value));
+			el = document.getElementById("date1");
+			el.innerHTML = d.toDateString();
+	}
+		
+	function onSlider2Change(e) {
+		inputs = document.getElementsByTagName("input");
+		d = new Date(parseInt(inputs[1].value));
+		el = document.getElementById("date2");
+		el.innerHTML = d.toDateString();
+	}
+
+	function onLoad() {
+		window.database = Exhibit.Database.create();
+		window.database.loadDataLinks(onDataLoaded);
+		
+	}
+
+	function onDataLoaded() {
+		window.exhibit = Exhibit.create();
+		
+		window.exhibit.configureFromDOM();
+		inputs = document.getElementsByTagName("input");
+		handles = document.getElementsByClassName("exhibit-slider-handle");
+		handles[0].onmousemove = onSlider1Change;
+		handles[1].onmousemove = onSlider2Change;
+		d = new Date(parseInt(inputs[0].value));
+		document.getElementById("date1").innerHTML = d.toDateString();
+		d = new Date(parseInt(inputs[1].value));
+		document.getElementById("date2").innerHTML = d.toDateString();
+};
+
+	function filterByConf(itemID) {
+		var confFacet = exhibit.getComponent("conf-facet");
+		var newRestrictions = { selection: [itemID],
+                                selectMissing: false };
+		confFacet.applyRestrictions(newRestrictions); 
+		
+		exhibit.getComponent("author-facet").clearAllRestrictions();
+		exhibit.getComponent("role-facet").clearAllRestrictions();
+		exhibit.getComponent("dep-facet").clearAllRestrictions();
+	}
+	var newRestrictions = { selection: null,
+                                selectMissing: false };
+	function filterByAuthor(itemID) {
+		var authorFacet = exhibit.getComponent("author-facet");
+		var newRestrictions = { selection: [itemID],
+                                selectMissing: false };
+		authorFacet.applyRestrictions(newRestrictions);
+		
+		exhibit.getComponent("conf-facet").clearAllRestrictions();
+		exhibit.getComponent("role-facet").clearAllRestrictions();
+		exhibit.getComponent("dep-facet").clearAllRestrictions();
+	}
+	
+	function _m(param1, param2) {
+		document.location.href = "mailto:" + param1 + "@" + param2;
+	}
+	
+
+</script>   
+  
+</html>
